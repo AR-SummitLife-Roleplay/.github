@@ -7,7 +7,7 @@ This is not an open source license. Reading this file, having access to a reposi
 ## 1. Definitions
 
 - **"Materials"** means everything in or taken from any SummitLife repository, at any point in its history: source code, scripts, configuration, prefabs, models, textures, materials, audio, animations, maps, terrain, text, translations, documentation, designs, plans, workflows, build files, commit history, issues and pull request discussions, and any build, package, addon or file produced from them.
-- **"Repository"** means any Git repository owned or controlled by SummitLife, including those in the `summitlife-rp` GitHub organization, and any copy, fork, mirror or clone of one.
+- **"Repository"** means any Git repository owned or controlled by SummitLife, including those in the `AR-SummitLife-Roleplay` GitHub organization, and any copy, fork, mirror or clone of one.
 - **"Authorized Person"** means an individual who (a) has signed the SummitLife Contributor Agreement, (b) has been given access to a Repository by SummitLife's owners, and (c) has not had that access removed.
 - **"Contribution"** means anything an Authorized Person, or anyone else, creates for SummitLife or submits to a Repository, in any form, whether by commit, pull request, upload, message, file transfer or otherwise.
 - **"Use"** means to copy, run, load, modify, adapt, translate, compile, build, package, publish, distribute, display, perform, sell, license, host, mirror, share or otherwise exploit, in whole or in part, by any means.
@@ -24,7 +24,7 @@ While, and only while, someone is an Authorized Person, they may access and modi
 - covers only the Repositories and the work SummitLife has assigned;
 - gives no right to Use the Materials for any other purpose, project, server, community, game, mod, portfolio or person, including the Authorized Person's own.
 
-Viewing a public Repository, such as `summitlife-rp/.github`, gives no permission at all beyond viewing it on GitHub.
+Viewing a public Repository, such as `AR-SummitLife-Roleplay/.github`, gives no permission at all beyond viewing it on GitHub.
 
 ## 4. What Is Forbidden
 

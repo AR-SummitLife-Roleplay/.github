@@ -5,5 +5,5 @@ rules:
       policies:
         # Our own shared workflows are called at main on purpose, so every repository
         # gets fixes at once. Everything else must be pinned to a commit.
-        summitlife-rp/*: any
+        AR-SummitLife-Roleplay/*: any
         "*": hash-pin
