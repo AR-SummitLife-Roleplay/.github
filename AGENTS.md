@@ -11,9 +11,10 @@ Organization-wide settings for Caldera: the shared CI workflows every repository
 
 ## Before You Start
 
-1. Read this repository's `Documentation/README.md`.
-2. Read the `caldera-handbook` documents for your task: `Documentation/Product/Product-Requirements.md` for features and business rules (the only home for tuning values), and `Documentation/Engineering/Architecture/System-Architecture.md` for how the parts fit together.
-3. Check whether what you need already exists, here or in another team's published addon, before building it.
+1. Read `caldera-handbook`, `Documentation/Engineering/Standards/Engineering-Principles.md` (what good work looks like) and `Documentation/Engineering/Development/Working-With-AI-Agents.md` (the loop every task follows: understand, ask once, look before building, build small, prove it, update documents, hand over). If `caldera-handbook` is cloned beside this repository, it is at `../caldera-handbook/`.
+2. Read this repository's `Documentation/README.md`.
+3. Read the `caldera-handbook` documents for your task: `Documentation/Product/Product-Requirements.md` for features and business rules (the only home for tuning values), and `Documentation/Engineering/Architecture/System-Architecture.md` for how the parts fit together.
+4. Check whether what you need already exists, here or in another team's published addon, before building it.
 
 ## Always
 
@@ -28,3 +29,4 @@ Organization-wide settings for Caldera: the shared CI workflows every repository
 - Never commit secrets, passwords, tokens or live server settings.
 - Never weaken a check, test or security control to get a passing result.
 - Do not push, merge, tag, publish to the Workshop, deploy or delete data without explicit approval from this repository's owner.
+- Before calling a task done, run this repository's checks (listed in Working With AI Agents) and end with the hand-over report: done, checked, not checked, decisions, next.
