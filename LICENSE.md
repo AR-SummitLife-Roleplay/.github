@@ -1,6 +1,6 @@
 # Caldera Source Code License
 
-Copyright © 2026 [Open: Licensor's legal name] ("Caldera", "we", "us"). All rights reserved.
+Copyright © 2026 Caldera Roleplay ("Caldera", "we", "us"). All rights reserved.
 
 This is not an open source license. Reading this file, having access to a repository or holding a copy of any of its contents gives you no right to use them, except the narrow permission in Section 3.
 
