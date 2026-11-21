@@ -1,6 +1,6 @@
 # Documentation
 
-> **Purpose:** The map of `.github`'s documents and how the shared workflows are used. Project-wide documents live in `caldera-handbook`; link to them instead of copying them here.
+> **Purpose:** The map of `.github`'s documents and how the shared workflows are used. Project-wide documents live in `summitlife-handbook`; link to them instead of copying them here.
 > **Owner:** Development Lead · **Last Reviewed:** 2026-11-21
 
 ## This Repository
@@ -21,29 +21,29 @@ Each repository's `.github/workflows/ci.yml` calls these at `main`, so a change 
 | Workflow | Runs | Where |
 | --- | --- | --- |
 | `hygiene.yml` | Secret scan of the whole history (gitleaks), workflow lint (actionlint) and security scan (zizmor), formatting, JSON and YAML parsing, Markdown links. | GitHub-hosted, every repository |
-| `framework-checks.yml` | The framework text checks from `caldera-framework`'s `Scripts/Checks`. Workbench checks once the Windows runner exists. | GitHub-hosted; Windows runner later |
+| `framework-checks.yml` | The framework text checks from `summitlife-framework`'s `Scripts/Checks`. Workbench checks once the Windows runner exists. | GitHub-hosted; Windows runner later |
 | `addon-build.yml` | File and folder names, Git LFS pointers and file sizes. Packing and Workshop publishing on pushes to `main` once the Windows runner exists. | GitHub-hosted; Windows runner later |
-| `platform-ci.yml` | Lint, type check, unit tests, integration tests against a real PostgreSQL, dependency audit, and container image builds for `caldera-platform`. | GitHub-hosted |
+| `platform-ci.yml` | Lint, type check, unit tests, integration tests against a real PostgreSQL, dependency audit, and container image builds for `summitlife-platform`. | GitHub-hosted |
 | `notify-discord.yml` | Posts a failed run on `main` to the team's Discord channel. | GitHub-hosted |
 
 ### Turning On the Windows Build Runner
 
 `framework-checks.yml` and `addon-build.yml` have a `windows-runner` input that defaults to off. When the runner exists, with the labels `self-hosted`, `Windows` and `Workbench`:
 
-1. Add `Scripts/Checks/Run-WorkbenchChecks.ps1` to `caldera-framework` and `Scripts/Build/Publish-Addon.ps1` to each addon repository.
+1. Add `Scripts/Checks/Run-WorkbenchChecks.ps1` to `summitlife-framework` and `Scripts/Build/Publish-Addon.ps1` to each addon repository.
 2. Change the input's default to `true` in both workflows.
 
 Until then, those jobs write a notice saying they are not running yet. A job turned on without its script fails, so nothing is skipped silently.
 
 ### Discord Notifications
 
-Add the team channel's webhook address to each repository as the `DISCORD_WEBHOOK_URL` secret (repository settings, Secrets and variables, Actions). Only failures on `main` are posted. Without the secret, failed runs only show on GitHub. Which repository posts to which channel: `caldera-handbook`, `Documentation/Engineering/Delivery/Developer-Discord.md`.
+Add the team channel's webhook address to each repository as the `DISCORD_WEBHOOK_URL` secret (repository settings, Secrets and variables, Actions). Only failures on `main` are posted. Without the secret, failed runs only show on GitHub. Which repository posts to which channel: `summitlife-handbook`, `Documentation/Engineering/Delivery/Developer-Discord.md`.
 
 ### Tool Versions
 
 `hygiene.yml` pins every tool's version, and checks the downloaded gitleaks and actionlint files against their published SHA-256 checksums. Third-party actions are pinned to a commit. To update a tool, change its version and checksum together.
 
-## In the Handbook (`caldera-handbook`)
+## In the Handbook (`summitlife-handbook`)
 
 | Need | Document |
 | --- | --- |

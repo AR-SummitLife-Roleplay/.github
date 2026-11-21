@@ -1,4 +1,4 @@
-# Shared checks for caldera-platform (TypeScript, decision 0004 in caldera-handbook):
+# Shared checks for summitlife-platform (TypeScript, decision 0004 in summitlife-handbook):
 # lint, type check, unit tests, integration tests against a real PostgreSQL, a dependency audit,
 # and a build of every service's container image, on every pull request and push.
 # [Open] Image vulnerability scanning is added with the deployment pipeline.
@@ -17,17 +17,17 @@ jobs:
     timeout-minutes: 15
     services:
       postgres:
-        # Same pinned PostgreSQL 18 image as caldera-platform's Infrastructure/Local/compose.yaml.
+        # Same pinned PostgreSQL 18 image as summitlife-platform's Infrastructure/Local/compose.yaml.
         # Test-only database with no password, reachable only from this job.
         image: postgres:18@sha256:eb63372c1e05c755f55fa30cbd07aecc443676fc6c0fa90b9002d01537841e1a
         env:
-          POSTGRES_USER: caldera
-          POSTGRES_DB: caldera
+          POSTGRES_USER: summitlife
+          POSTGRES_DB: summitlife
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U caldera"
+          --health-cmd "pg_isready -U summitlife"
           --health-interval 2s
           --health-timeout 3s
           --health-retries 30
@@ -60,7 +60,7 @@ jobs:
 
       - name: Integration tests (real PostgreSQL)
         env:
-          TEST_DATABASE_URL: postgres://caldera@localhost:5432/caldera
+          TEST_DATABASE_URL: postgres://summitlife@localhost:5432/summitlife
         run: pnpm run test:integration
 
       - name: Dependency audit (high and critical fail the build)
@@ -86,7 +86,7 @@ jobs:
             # Image names must be lowercase; folder names are PascalCase.
             unit=$(basename "$(dirname "$dockerfile")" | tr '[:upper:]' '[:lower:]')
             echo "::group::$unit"
-            docker build --file "$dockerfile" --tag "caldera/$unit:ci" .
+            docker build --file "$dockerfile" --tag "summitlife/$unit:ci" .
             echo "::endgroup::"
           done
           if [ "$found" = 0 ]; then echo "::notice::No service images to build yet."; fi

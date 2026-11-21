@@ -1,10 +1,10 @@
 # Security Policy
 
-If you find a security problem in Caldera's servers, website, Discord bot or addons, report it privately. Do not post it publicly, in game, or in a public Discord channel, and do not test it on the live servers.
+If you find a security problem in SummitLife's servers, website, Discord bot or addons, report it privately. Do not post it publicly, in game, or in a public Discord channel, and do not test it on the live servers.
 
 ## How to Report
 
-- Open a ticket in the official Caldera Discord and mark it as a security report, or message a member of Management directly.
+- Open a ticket in the official SummitLife Discord and mark it as a security report, or message a member of Management directly.
 - [Open] A dedicated security contact address.
 
 Include what you found, how to reproduce it, and what it could let someone do. We will acknowledge the report and keep you updated until it is fixed.

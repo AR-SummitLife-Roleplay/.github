@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 # Where the shared workflows check out this repository's scripts inside the calling repository.
-SHARED_SCRIPTS_CHECKOUT = ".caldera-ci"
+SHARED_SCRIPTS_CHECKOUT = ".summitlife-ci"
 
 
 def tracked_files(root, suffixes=None):

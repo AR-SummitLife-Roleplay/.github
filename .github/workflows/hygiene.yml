@@ -1,4 +1,4 @@
-# Shared light checks every Caldera repository runs: secret scan, workflow lint and
+# Shared light checks every SummitLife repository runs: secret scan, workflow lint and
 # security scan, formatting, JSON and YAML parsing, and Markdown links.
 # Runs on a GitHub-hosted runner and takes about a minute.
 name: Hygiene
@@ -38,9 +38,9 @@ jobs:
         if: ${{ !inputs.scripts-from-caller }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: caldera-rp/.github
+          repository: summitlife-rp/.github
           ref: main
-          path: .caldera-ci
+          path: .summitlife-ci
           persist-credentials: false
 
       - name: Install check tools
@@ -64,7 +64,7 @@ jobs:
           FROM_CALLER: ${{ inputs.scripts-from-caller }}
         run: |
           if [ "$FROM_CALLER" = "true" ]; then echo "SCRIPTS=$GITHUB_WORKSPACE/Scripts" >> "$GITHUB_ENV"
-          else echo "SCRIPTS=$GITHUB_WORKSPACE/.caldera-ci/Scripts" >> "$GITHUB_ENV"; fi
+          else echo "SCRIPTS=$GITHUB_WORKSPACE/.summitlife-ci/Scripts" >> "$GITHUB_ENV"; fi
 
       - name: Secret scan (whole history)
         run: gitleaks git --redact --no-banner --exit-code 1 .

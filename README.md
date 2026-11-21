@@ -1,6 +1,6 @@
 # .github
 
-Organization-wide settings for Caldera: the shared CI workflows every repository calls, default issue and pull request templates, the security policy and the organization's public profile page.
+Organization-wide settings for SummitLife: the shared CI workflows every repository calls, default issue and pull request templates, the security policy and the organization's public profile page.
 
 | | |
 | --- | --- |
@@ -25,9 +25,9 @@ Organization-wide settings for Caldera: the shared CI workflows every repository
 | `notify-discord.yml` | Failed runs to Discord |
 
 How to call them, turn on the Windows runner and set up Discord: [Documentation/README.md](Documentation/README.md).
-Details: `caldera-handbook`, `Documentation/Engineering/Delivery/CI-CD-And-Release-Management.md`
+Details: `summitlife-handbook`, `Documentation/Engineering/Delivery/CI-CD-And-Release-Management.md`
 
 ## Documents
 
 - This repository: [Documentation/README.md](Documentation/README.md).
-- Project-wide (features, rules, architecture, delivery): `caldera-handbook`, starting at `Documentation/README.md`.
+- Project-wide (features, rules, architecture, delivery): `summitlife-handbook`, starting at `Documentation/README.md`.

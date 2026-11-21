@@ -28,13 +28,13 @@ jobs:
       - name: Check out the shared check scripts
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: caldera-rp/.github
+          repository: summitlife-rp/.github
           ref: main
-          path: .caldera-ci
+          path: .summitlife-ci
           persist-credentials: false
 
       - name: Check names, LFS pointers and sizes
-        run: python3 -I .caldera-ci/Scripts/check_addon_files.py .
+        run: python3 -I .summitlife-ci/Scripts/check_addon_files.py .
 
   pack-and-publish:
     name: Pack and publish

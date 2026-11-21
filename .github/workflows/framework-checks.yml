@@ -1,4 +1,4 @@
-# The framework quality checks: caldera-framework calls this on every pull request and
+# The framework quality checks: summitlife-framework calls this on every pull request and
 # every push to main. The rules are in that repository's Documentation/Coding-Conventions.md
 # and its Scripts/Checks folder enforces them.
 name: Framework checks
