@@ -6,6 +6,7 @@ All notable changes to `.github` are recorded here. The format follows [Keep a C
 
 ### Added
 
+- The addon file check allows the `<world>_Layers` folder Workbench saves next to each `<world>.ent` world file.
 - Platform CI builds every service's container image.
 - Platform CI runs integration tests against a real PostgreSQL 18.
 - Platform CI runs lint, type check, unit tests and a dependency audit.
