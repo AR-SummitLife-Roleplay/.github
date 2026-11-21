@@ -21,7 +21,7 @@ Organization-wide settings for Caldera: the shared CI workflows every repository
 | `hygiene.yml` | Secret scan, workflow lint and security scan, formatting, JSON and YAML parsing, links |
 | `framework-checks.yml` | Framework text checks; Workbench checks once the Windows build runner exists |
 | `addon-build.yml` | File names, Git LFS pointers, file sizes; pack and Workshop publish once the Windows build runner exists |
-| `platform-ci.yml` | Fails if platform code exists without checks; real checks come with the first code |
+| `platform-ci.yml` | Platform lint, type check, unit tests and dependency audit |
 | `notify-discord.yml` | Failed runs to Discord |
 
 How to call them, turn on the Windows runner and set up Discord: [Documentation/README.md](Documentation/README.md).

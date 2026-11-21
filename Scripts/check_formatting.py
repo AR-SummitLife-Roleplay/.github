@@ -56,7 +56,7 @@ def main():
             if suffix == ".json":
                 json.loads(text)
             elif suffix in {".yml", ".yaml"}:
-                yaml.safe_load(text)
+                list(yaml.safe_load_all(text))  # files may hold several YAML documents
         except (ValueError, yaml.YAMLError) as error:
             problems.append(f"{name}: does not parse: {error}".splitlines()[0])
     for p in problems:

@@ -1,6 +1,6 @@
-# Shared checks for caldera-platform (TypeScript, decision 0004 in caldera-handbook).
-# Lint, type check, tests, image builds and scans are written with the first code.
-# Until they are, this fails as soon as any code is added, so no code goes unchecked.
+# Shared checks for caldera-platform (TypeScript, decision 0004 in caldera-handbook):
+# lint, type check, unit tests and a dependency audit, on every pull request and push.
+# Image builds and scans are added with the first deployable unit.
 name: Platform CI
 
 on:
@@ -11,21 +11,35 @@ permissions:
 
 jobs:
   platform:
-    name: Platform checks
+    name: Lint, type check, tests and audit
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Fail if code exists without checks
-        run: |
-          code=$(git ls-files Source Tests | grep -v '/\.gitkeep$' || true)
-          if [ -n "$code" ]; then
-            echo "::error::Platform code exists but its checks are not written. Add them to caldera-rp/.github, .github/workflows/platform-ci.yml."
-            echo "$code"
-            exit 1
-          fi
-          echo "::notice::No platform code yet. Lint, type checks, tests, image builds and scans are added with the first code."
+      - name: Install pnpm (version from package.json)
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - name: Install Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: pnpm
+
+      - name: Install dependencies (exactly as locked)
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Type check
+        run: pnpm run typecheck
+
+      - name: Unit tests
+        run: pnpm run test
+
+      - name: Dependency audit (high and critical fail the build)
+        run: pnpm audit --audit-level high
