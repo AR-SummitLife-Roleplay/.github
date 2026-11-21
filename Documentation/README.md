@@ -24,7 +24,7 @@ Each repository's `.github/workflows/ci.yml` calls these at `main`, so a change 
 | `framework-checks.yml` | The framework text checks from `caldera-framework`'s `Scripts/Checks`. Workbench checks once the Windows runner exists. | GitHub-hosted; Windows runner later |
 | `addon-build.yml` | File and folder names, Git LFS pointers and file sizes. Packing and Workshop publishing on pushes to `main` once the Windows runner exists. | GitHub-hosted; Windows runner later |
 | `platform-ci.yml` | Fails as soon as platform code exists without its checks; the real checks are written with the first code, once the stack is chosen. | GitHub-hosted |
-| `notify-discord.yml` | Posts a failed run to the developers' Discord channel. | GitHub-hosted |
+| `notify-discord.yml` | Posts a failed run on `main` to the team's Discord channel. | GitHub-hosted |
 
 ### Turning On the Windows Build Runner
 
@@ -37,7 +37,7 @@ Until then, those jobs write a notice saying they are not running yet. A job tur
 
 ### Discord Notifications
 
-Add the developers' channel webhook address to each repository as the `DISCORD_WEBHOOK_URL` secret (repository settings, Secrets and variables, Actions). Without it, failed runs only show on GitHub.
+Add the team channel's webhook address to each repository as the `DISCORD_WEBHOOK_URL` secret (repository settings, Secrets and variables, Actions). Only failures on `main` are posted. Without the secret, failed runs only show on GitHub. Which repository posts to which channel: `caldera-handbook`, `Documentation/Engineering/Delivery/Developer-Discord.md`.
 
 ### Tool Versions
 
