@@ -1,0 +1,12 @@
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.scratch/
+
+# Local environment files and keys: never committed
+.env
+.env.*
+!.env.example
+*.pem
+*.key
