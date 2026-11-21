@@ -2,7 +2,8 @@
 
 Usage: python3 -I check_addon_files.py [repository folder]
 - Folder names use PascalCase letters and digits only: no spaces, dots, dashes or underscores.
-  GitHub's own folders (.github, ISSUE_TEMPLATE, workflows) are allowed.
+  GitHub's own folders (.github, ISSUE_TEMPLATE, workflows) are allowed, and so is the
+  <world>_Layers folder Workbench saves next to each <world>.ent world file.
 - File names have no spaces.
 - Every file .gitattributes sends to Git LFS is committed as an LFS pointer, never as the file itself.
 - No other file is larger than the limit below.
@@ -20,6 +21,8 @@ from repository_files import lfs_files, tracked_files  # noqa: E402
 MAX_NON_LFS_BYTES = 5 * 1024 * 1024
 FOLDER_NAME = re.compile(r"^[A-Z][A-Za-z0-9]*$")
 GITHUB_FOLDERS = {".github", "ISSUE_TEMPLATE", "workflows"}
+# Workbench names a world's layer folder after the world file; the name is fixed by the tool.
+WORLD_LAYERS_SUFFIX = "_Layers"
 LFS_POINTER = b"version https://git-lfs.github.com/spec/v1\n"
 
 
@@ -44,12 +47,22 @@ def main():
     for folder in sorted(folders):
         if folder == Path("."):
             continue
-        if folder.name not in GITHUB_FOLDERS and not FOLDER_NAME.match(folder.name):
+        if folder.name in GITHUB_FOLDERS or is_world_layers(root, folder):
+            continue
+        if not FOLDER_NAME.match(folder.name):
             problems.append(f"{folder}/: folder name is not PascalCase letters and digits")
     for p in problems:
         print(p)
     print(f"{len(files)} file(s) and {len(folders) - 1 if folders else 0} folder(s) checked, {len(problems)} problem(s)")
     return 1 if problems else 0
+
+
+def is_world_layers(root, folder):
+    """True for a Workbench layer folder: <world>_Layers beside its <world>.ent file."""
+    if not folder.name.endswith(WORLD_LAYERS_SUFFIX):
+        return False
+    world = folder.name[: -len(WORLD_LAYERS_SUFFIX)]
+    return bool(world) and (root / folder.parent / f"{world}.ent").is_file()
 
 
 if __name__ == "__main__":
