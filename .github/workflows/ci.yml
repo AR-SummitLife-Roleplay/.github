@@ -1,0 +1,23 @@
+# CI for the .github repository itself. It runs the shared hygiene checks using this
+# repository's own Scripts folder, so a change to the scripts or workflows is tested
+# before other repositories use it.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# A newer push to the same pull request cancels the older run, saving free runner minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  hygiene:
+    uses: ./.github/workflows/hygiene.yml
+    with:
+      scripts-from-caller: true

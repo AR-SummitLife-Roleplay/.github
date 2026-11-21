@@ -1,0 +1,5 @@
+# Settings for actionlint, run by hygiene.yml.
+self-hosted-runner:
+  # The label our Windows build runner carries, alongside self-hosted and Windows.
+  labels:
+    - Workbench

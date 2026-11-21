@@ -1,0 +1,56 @@
+# The framework quality checks: caldera-framework calls this on every pull request and
+# every push to main. The rules are in that repository's Documentation/Coding-Conventions.md
+# and its Scripts/Checks folder enforces them.
+name: Framework checks
+
+on:
+  workflow_call:
+    inputs:
+      windows-runner:
+        description: Run the Workbench checks on the self-hosted Windows build runner. Off until that runner exists.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  text-checks:
+    name: Text checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Naming, comments, size, text, logs, tuning values and server authority
+        run: python3 -I Scripts/Checks/check_framework.py .
+
+  workbench-checks:
+    name: Workbench checks
+    needs: [text-checks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    if: ${{ !inputs.windows-runner }}
+    steps:
+      - name: Report that Workbench checks are not running yet
+        run: echo "::notice::Workbench checks (script compile, pack, smoke test, logic tests) start once the Windows build runner exists."
+
+  workbench-checks-on-runner:
+    name: Workbench checks
+    needs: [text-checks]
+    runs-on: [self-hosted, Windows, Workbench]
+    timeout-minutes: 60
+    if: ${{ inputs.windows-runner }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          lfs: true
+          persist-credentials: false
+
+      - name: Script compile, pack, smoke test and logic tests
+        shell: pwsh
+        run: ./Scripts/Checks/Run-WorkbenchChecks.ps1

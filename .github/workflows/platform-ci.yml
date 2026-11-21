@@ -1,0 +1,31 @@
+# Shared checks for caldera-platform. The platform's languages and frameworks are not
+# chosen yet, so its lint, type check, tests, image builds and scans are written then.
+# Until they are, this fails as soon as any code is added, so no code goes unchecked.
+name: Platform CI
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  platform:
+    name: Platform checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Fail if code exists without checks
+        run: |
+          code=$(git ls-files Source Tests | grep -v '/\.gitkeep$' || true)
+          if [ -n "$code" ]; then
+            echo "::error::Platform code exists but its checks are not written. Add them to caldera-rp/.github, .github/workflows/platform-ci.yml."
+            echo "$code"
+            exit 1
+          fi
+          echo "::notice::No platform code yet. Lint, type checks, tests, image builds and scans are added with the first code."

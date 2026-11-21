@@ -1,0 +1,9 @@
+# Settings for the zizmor workflow security scan run by hygiene.yml.
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        # Our own shared workflows are called at main on purpose, so every repository
+        # gets fixes at once. Everything else must be pinned to a commit.
+        caldera-rp/*: any
+        "*": hash-pin

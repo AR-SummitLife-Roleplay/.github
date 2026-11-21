@@ -1,0 +1,82 @@
+# Shared light checks every Caldera repository runs: secret scan, workflow lint and
+# security scan, formatting, JSON and YAML parsing, and Markdown links.
+# Runs on a GitHub-hosted runner and takes about a minute.
+name: Hygiene
+
+on:
+  workflow_call:
+    inputs:
+      scripts-from-caller:
+        description: Use the calling repository's own Scripts folder. Only the .github repository sets this, so a change to the scripts is tested before it reaches main.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  GITLEAKS_VERSION: 8.30.1
+  GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+  ACTIONLINT_VERSION: 1.7.12
+  ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+  PYYAML_VERSION: 6.0.3
+  ZIZMOR_VERSION: 1.16.3
+
+jobs:
+  hygiene:
+    name: Secrets, workflows, formatting and links
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check out the shared check scripts
+        if: ${{ !inputs.scripts-from-caller }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: caldera-rp/.github
+          ref: main
+          path: .caldera-ci
+          persist-credentials: false
+
+      - name: Install check tools
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          mkdir -p bin
+          curl -fsSLo gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz -C bin gitleaks
+          curl -fsSLo actionlint.tar.gz "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          echo "${ACTIONLINT_SHA256}  actionlint.tar.gz" | sha256sum -c -
+          tar -xzf actionlint.tar.gz -C bin actionlint
+          python3 -m venv venv
+          venv/bin/pip install --quiet --disable-pip-version-check "pyyaml==${PYYAML_VERSION}" "zizmor==${ZIZMOR_VERSION}"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
+
+      - name: Choose the check scripts
+        env:
+          FROM_CALLER: ${{ inputs.scripts-from-caller }}
+        run: |
+          if [ "$FROM_CALLER" = "true" ]; then echo "SCRIPTS=$GITHUB_WORKSPACE/Scripts" >> "$GITHUB_ENV"
+          else echo "SCRIPTS=$GITHUB_WORKSPACE/.caldera-ci/Scripts" >> "$GITHUB_ENV"; fi
+
+      - name: Secret scan (whole history)
+        run: gitleaks git --redact --no-banner --exit-code 1 .
+
+      - name: Workflow lint
+        run: actionlint -color
+
+      - name: Workflow security scan
+        run: zizmor --offline --config "$SCRIPTS/zizmor.yml" .github/workflows
+
+      - name: Formatting, JSON and YAML
+        run: python3 -I "$SCRIPTS/check_formatting.py" .
+
+      - name: Markdown links
+        run: python3 -I "$SCRIPTS/check_links.py" .

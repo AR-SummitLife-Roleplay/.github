@@ -1,0 +1,38 @@
+# Posts a failed check or build to the developers' Discord channel.
+# Each repository stores the channel's webhook address as the DISCORD_WEBHOOK_URL secret.
+# Without it, this only writes a notice, so repositories work before Discord is set up.
+name: Notify Discord
+
+on:
+  workflow_call:
+    inputs:
+      result:
+        description: What happened, for example "CI failed".
+        type: string
+        required: true
+    secrets:
+      DISCORD_WEBHOOK_URL:
+        required: false
+
+permissions: {}
+
+jobs:
+  notify:
+    name: Post to Discord
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Post the result
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          RESULT: ${{ inputs.result }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "::notice::DISCORD_WEBHOOK_URL is not set for this repository, so nothing was posted."
+            exit 0
+          fi
+          payload=$(jq -n --arg content "$RESULT: $REPOSITORY on $BRANCH. $RUN_URL" '{content: $content, allowed_mentions: {parse: []}}')
+          curl -fsS -X POST -H "Content-Type: application/json" --data "$payload" "$WEBHOOK"

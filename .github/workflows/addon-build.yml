@@ -1,0 +1,64 @@
+# Shared checks and build for every Workbench addon repository (framework and art).
+# File checks run on every pull request and push. Packing and Workshop publishing run
+# only on pushes to main, on the self-hosted Windows build runner, once it exists.
+name: Addon build
+
+on:
+  workflow_call:
+    inputs:
+      windows-runner:
+        description: Pack and publish on the self-hosted Windows build runner. Off until that runner exists.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  file-checks:
+    name: File and folder names, Git LFS pointers, file sizes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out the shared check scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: caldera-rp/.github
+          ref: main
+          path: .caldera-ci
+          persist-credentials: false
+
+      - name: Check names, LFS pointers and sizes
+        run: python3 -I .caldera-ci/Scripts/check_addon_files.py .
+
+  pack-and-publish:
+    name: Pack and publish
+    needs: [file-checks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    if: ${{ !inputs.windows-runner && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Report that packing is not running yet
+        run: echo "::notice::Packing, the size budget and Workshop publishing start once the Windows build runner exists."
+
+  pack-and-publish-on-runner:
+    name: Pack and publish
+    needs: [file-checks]
+    runs-on: [self-hosted, Windows, Workbench]
+    timeout-minutes: 60
+    if: ${{ inputs.windows-runner && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          lfs: true
+          persist-credentials: false
+
+      - name: Pack, check the size budget and publish to the Workshop
+        shell: pwsh
+        run: ./Scripts/Build/Publish-Addon.ps1
