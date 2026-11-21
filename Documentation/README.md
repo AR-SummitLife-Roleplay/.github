@@ -23,7 +23,7 @@ Each repository's `.github/workflows/ci.yml` calls these at `main`, so a change 
 | `hygiene.yml` | Secret scan of the whole history (gitleaks), workflow lint (actionlint) and security scan (zizmor), formatting, JSON and YAML parsing, Markdown links. | GitHub-hosted, every repository |
 | `framework-checks.yml` | The framework text checks from `caldera-framework`'s `Scripts/Checks`. Workbench checks once the Windows runner exists. | GitHub-hosted; Windows runner later |
 | `addon-build.yml` | File and folder names, Git LFS pointers and file sizes. Packing and Workshop publishing on pushes to `main` once the Windows runner exists. | GitHub-hosted; Windows runner later |
-| `platform-ci.yml` | Lint, type check, unit tests and dependency audit for `caldera-platform`. | GitHub-hosted |
+| `platform-ci.yml` | Lint, type check, unit tests, integration tests against a real PostgreSQL, and dependency audit for `caldera-platform`. | GitHub-hosted |
 | `notify-discord.yml` | Posts a failed run on `main` to the team's Discord channel. | GitHub-hosted |
 
 ### Turning On the Windows Build Runner

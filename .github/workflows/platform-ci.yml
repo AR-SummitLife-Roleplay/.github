@@ -1,6 +1,6 @@
 # Shared checks for caldera-platform (TypeScript, decision 0004 in caldera-handbook):
-# lint, type check, unit tests and a dependency audit, on every pull request and push.
-# Image builds and scans are added with the first deployable unit.
+# lint, type check, unit tests, integration tests against a real PostgreSQL, and a dependency
+# audit, on every pull request and push. Image builds and scans are added with the first deployable unit.
 name: Platform CI
 
 on:
@@ -13,7 +13,23 @@ jobs:
   platform:
     name: Lint, type check, tests and audit
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    services:
+      postgres:
+        # Same pinned PostgreSQL 18 image as caldera-platform's Infrastructure/Local/compose.yaml.
+        # Test-only database with no password, reachable only from this job.
+        image: postgres:18@sha256:eb63372c1e05c755f55fa30cbd07aecc443676fc6c0fa90b9002d01537841e1a
+        env:
+          POSTGRES_USER: caldera
+          POSTGRES_DB: caldera
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U caldera"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -40,6 +56,11 @@ jobs:
 
       - name: Unit tests
         run: pnpm run test
+
+      - name: Integration tests (real PostgreSQL)
+        env:
+          TEST_DATABASE_URL: postgres://caldera@localhost:5432/caldera
+        run: pnpm run test:integration
 
       - name: Dependency audit (high and critical fail the build)
         run: pnpm audit --audit-level high
