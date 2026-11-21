@@ -1,6 +1,7 @@
 # Shared checks for caldera-platform (TypeScript, decision 0004 in caldera-handbook):
-# lint, type check, unit tests, integration tests against a real PostgreSQL, and a dependency
-# audit, on every pull request and push. Image builds and scans are added with the first deployable unit.
+# lint, type check, unit tests, integration tests against a real PostgreSQL, a dependency audit,
+# and a build of every service's container image, on every pull request and push.
+# [Open] Image vulnerability scanning is added with the deployment pipeline.
 name: Platform CI
 
 on:
@@ -64,3 +65,27 @@ jobs:
 
       - name: Dependency audit (high and critical fail the build)
         run: pnpm audit --audit-level high
+
+  images:
+    name: Build container images
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build every service image
+        run: |
+          set -euo pipefail
+          found=0
+          for dockerfile in Source/Backend/*/Dockerfile; do
+            [ -e "$dockerfile" ] || continue
+            found=1
+            unit=$(basename "$(dirname "$dockerfile")")
+            echo "::group::$unit"
+            docker build --file "$dockerfile" --tag "caldera/$unit:ci" .
+            echo "::endgroup::"
+          done
+          if [ "$found" = 0 ]; then echo "::notice::No service images to build yet."; fi
