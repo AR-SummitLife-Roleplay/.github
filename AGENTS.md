@@ -24,6 +24,7 @@ Organization-wide settings for Caldera: the shared CI workflows every repository
 - GitHub fixes this repository's name and the names `profile/`, `ISSUE_TEMPLATE/`, `.github/workflows/`, `PULL_REQUEST_TEMPLATE.md` and `SECURITY.md`; keep them exactly.
 - Update the documentation that owns what you changed, in the same change. Do not create summary, notes or status files.
 - Add a line to `CHANGELOG.md` under Unreleased for anything players, staff or other teams will notice.
+- Everything here is under [LICENSE.md](LICENSE.md): all rights reserved. Never copy any of it outside Caldera's repositories, and never add anything Caldera does not own or have the right to use.
 - Never commit secrets, passwords, tokens or live server settings.
 - Never weaken a check, test or security control to get a passing result.
 - Do not push, merge, tag, publish to the Workshop, deploy or delete data without explicit approval from this repository's owner.

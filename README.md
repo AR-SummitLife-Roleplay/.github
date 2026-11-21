@@ -5,6 +5,7 @@ Organization-wide settings for Caldera: the shared CI workflows every repository
 | | |
 | --- | --- |
 | Owner | Development Lead |
+| License | All rights reserved: [LICENSE.md](LICENSE.md). Not open source. |
 | Visibility | [Assumed] Public: GitHub requires it for organization-wide templates and the profile page. It never holds secrets or private plans. |
 | Status | Shared checks running since 2026-11-21; Windows build runner jobs not yet |
 

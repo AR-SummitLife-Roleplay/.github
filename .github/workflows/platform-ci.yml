@@ -1,5 +1,5 @@
-# Shared checks for caldera-platform. The platform's languages and frameworks are not
-# chosen yet, so its lint, type check, tests, image builds and scans are written then.
+# Shared checks for caldera-platform (TypeScript, decision 0004 in caldera-handbook).
+# Lint, type check, tests, image builds and scans are written with the first code.
 # Until they are, this fails as soon as any code is added, so no code goes unchecked.
 name: Platform CI
 
