@@ -83,7 +83,8 @@ jobs:
           for dockerfile in Source/Backend/*/Dockerfile; do
             [ -e "$dockerfile" ] || continue
             found=1
-            unit=$(basename "$(dirname "$dockerfile")")
+            # Image names must be lowercase; folder names are PascalCase.
+            unit=$(basename "$(dirname "$dockerfile")" | tr '[:upper:]' '[:lower:]')
             echo "::group::$unit"
             docker build --file "$dockerfile" --tag "caldera/$unit:ci" .
             echo "::endgroup::"
