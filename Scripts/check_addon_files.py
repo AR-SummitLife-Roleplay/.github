@@ -3,7 +3,9 @@
 Usage: python3 -I check_addon_files.py [repository folder]
 - Folder names use PascalCase letters and digits only: no spaces, dots, dashes or underscores.
   GitHub's own folders (.github, ISSUE_TEMPLATE, workflows) are allowed, and so is the
-  <world>_Layers folder Workbench saves next to each <world>.ent world file.
+  <world>_Layers folder Workbench saves next to each <world>.ent world file, and the terrain
+  data folders Workbench names itself: .Data and .EditorData beside a .terr terrain file,
+  and .Shore beside a .ent world file.
 - File names have no spaces.
 - Every file .gitattributes sends to Git LFS is committed as an LFS pointer, never as the file itself.
 - No other file is larger than the limit below.
@@ -23,6 +25,8 @@ FOLDER_NAME = re.compile(r"^[A-Z][A-Za-z0-9]*$")
 GITHUB_FOLDERS = {".github", "ISSUE_TEMPLATE", "workflows"}
 # Workbench names a world's layer folder after the world file; the name is fixed by the tool.
 WORLD_LAYERS_SUFFIX = "_Layers"
+# Workbench names a terrain's data folders itself; each sits beside the file that owns it.
+TERRAIN_FOLDERS = {".Data": ".terr", ".EditorData": ".terr", ".Shore": ".ent"}
 LFS_POINTER = b"version https://git-lfs.github.com/spec/v1\n"
 
 
@@ -47,7 +51,7 @@ def main():
     for folder in sorted(folders):
         if folder == Path("."):
             continue
-        if folder.name in GITHUB_FOLDERS or is_world_layers(root, folder):
+        if folder.name in GITHUB_FOLDERS or is_world_layers(root, folder) or is_terrain_data(root, folder):
             continue
         if not FOLDER_NAME.match(folder.name):
             problems.append(f"{folder}/: folder name is not PascalCase letters and digits")
@@ -63,6 +67,12 @@ def is_world_layers(root, folder):
         return False
     world = folder.name[: -len(WORLD_LAYERS_SUFFIX)]
     return bool(world) and (root / folder.parent / f"{world}.ent").is_file()
+
+
+def is_terrain_data(root, folder):
+    """True for a Workbench terrain data folder beside the terrain or world file that owns it."""
+    owner = TERRAIN_FOLDERS.get(folder.name)
+    return bool(owner) and any((root / folder.parent).glob(f"*{owner}"))
 
 
 if __name__ == "__main__":
